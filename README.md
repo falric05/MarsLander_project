@@ -1,5 +1,4 @@
 # MarsLander_project
- 
  Project of **Language and Algorithm for Artificial Intelligence** (_a.y. 2021/22_)
 
  It is possible to have a look at the project in this link [Mars Lander - Episode 1](https://www.codingame.com/training/easy/mars-lander-episode-1) (a simple introduction) and [Mars Lander - Episode 2](https://www.codingame.com/training/easy/mars-lander-episode-2).
@@ -55,10 +54,17 @@
 
 #### Constraints
    2 ≤ `surfaceN` < 30
+
    0 ≤ `X` < 7000
+
    0 ≤ `Y` < 3000
+
    -500 < `hSpeed`, `vSpeed` < 500
+
    0 ≤ `fuel` ≤ 2000
+
    -90 ≤ `rotate` ≤ 90
+
    0 ≤ `power` ≤ 4
+   
    Response time per turn ≤ 100ms
