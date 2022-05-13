@@ -68,3 +68,9 @@
    0 ≤ `power` ≤ 4
    
    Response time per turn ≤ 100ms
+
+# Execute the project in Modules version
+More info about it in https://www.swi-prolog.org/pldoc/man?section=modules
+```
+consult('C:/Users/User/Documents/Unibo/LA4AI/Mod1/Project/MarsLander_project/modules/testModule').
+```
