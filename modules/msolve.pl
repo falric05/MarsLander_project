@@ -3,19 +3,36 @@
 :- dynamic lander_curr_pos/2.
 
 
-
-%	if instead the lander didn't started already we can initialize it
-updateLanderPosition(X, Y):-
-	lander(X, Y), asserta(lander_curr_pos(X, Y)).
-
 %% computes p list
-compute_Plist(P):- mars_zone(L), landing_site(X1, Y1, X, Y)
+get_Plist(Pout):- mars_zone(L), 
+    lander(Xl, Yl, _), landing_site(X0, Y, _, Y), bl_landing_site(BL),
+    Xl < X0, !, Xend is BL / 2 + X0, Yend is Y + (Y / 10),
+    get_Plist(L, [point(Xl, Yl)], Xl, Xend, P),
+    append(P, [point(Xend, Yend), point(Xend, Y)], Pout).
 
-.
+get_Plist(Pout):- 
+    lander(Xl, Yl, _), landing_site(X0, Y, X1, Y), bl_landing_site(BL),
+    Xl < X1, !, Xend is (BL / 2) + X0, Yend is Y + (Y / 10),
+    append([], [point(Xl, Yl), point(Xend, Yend), point(Xend, Y)], Pout).
 
-.
+get_Plist(Pout):- mars_zone(L), 
+    lander(Xl, Yl, _), landing_site(X0, Y, _, Y), bl_landing_site(BL),
+ 	Xend is BL / 2 + X0, Yend is (Y / 10),
+    get_Plist(L, [point(Xend, Yend), point(Xend, Y)], Xl, Xend, P),
+    append(P, [point(Xl, Yl)], Pout).
+
+get_Plist([], Pin, _, _, Pin):- !.
+
+get_Plist([surface(X,Y)|T], Pin, Xstart, Xend, Pout):- 
+    X > Xstart, X < Xend, !, Ydb is Y * 2,
+    append(Pin,[point(X, Ydb)],P), 
+    get_Plist(T, P, Xstart, Xend, Pout).
+
+get_Plist([surface(_, _)|T], Pin, Xstart, Xend, Pout):- 
+    get_Plist(T, Pin, Xstart, Xend, Pout).
 
 %% computes intervals of t (as a list)
+
 
 %% computes the bezier curve
 
