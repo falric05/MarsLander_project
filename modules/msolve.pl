@@ -2,8 +2,10 @@
 :- use_module(minput).
 :- dynamic lander_curr_pos/2.
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 			P POINTS
 %% computes p list
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 get_Plist(Pout):- mars_zone(L), 
     lander(Xl, Yl, _), landing_site(X0, Y, _, Y), bl_landing_site(BL),
     Xl < X0, !, Xend is BL / 2 + X0, Yend is Y + (Y / 10),
@@ -31,14 +33,37 @@ get_Plist([surface(X,Y)|T], Pin, Xstart, Xend, Pout):-
 get_Plist([surface(_, _)|T], Pin, Xstart, Xend, Pout):- 
     get_Plist(T, Pin, Xstart, Xend, Pout).
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 			T INTERVALS
 %% computes intervals of t (as a list)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% The size of t interval for approximate the Beziér curve
+t_size(100).
+
+get_step(S):- t_size(Size), S is 1 / Size.
+
+range(H, H, _, [H]):- !.
+range(L, H, _, [H]):- L > H, !.
+range(L, H, S, Out1):- L1 is L + S, range(L1, H, S, Out0), append([L], Out0, Out1).
+
+get_tInterval(T):- get_step(S), L is 0.0 + S, range(L, 1.0, S, T).
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% computes the bezier curve
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% checks if the lander reached the goal
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% solve predicate
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 solve:- 
 	testCheckSurface, write("Surface checked\n"),
 	testCheckSurface, write("Surface checked\n"),
