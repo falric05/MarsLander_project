@@ -1,5 +1,7 @@
 :- use_module(minput).
 :- use_module(mcheck).
+:- use_module(mbezier).
+:- use_module(mutil).
 
 %:- zone(_, _), write('zone size fixed').
 % +------------------------------------------+
@@ -39,6 +41,23 @@ checkInput:-
     checkLandingsite(S, BL, _, _).
 
 
-:- testCheckSurface, write("Surface checked\n").
-:- testCheckLandingSite, write("Landing Site checked\n").
-:- checkInput, write("Input checked\n").
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%              INPUT tests                 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+:- testCheckSurface, write("<=> Surface checked\n\n").
+:- testCheckLandingSite, write("\n<=> Landing Site checked\n\n").
+:- checkInput, write("<=> Input checked\n\n").
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%              BEZIER tests                 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+:- get_tInterval([H1, H2, H3| T]), tail(T, R), write("["), 
+   write(H1), write(", "), write(H2), write(", "), write(H3), 
+   write(", ..., "), write(R), write("]"),
+   write("\n<=> t interval for Bezier curve approximation checked\n\n").
+:- get_Plist(P), write(P), write("\n<=> p ponts for Bezier curve approximation checked\n\n").
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+:- write("test completed! - success!").

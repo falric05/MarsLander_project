@@ -1,10 +1,11 @@
 :- module(mcheck, [checkX/1, checkY/1, checkF/1, checkSurface/1, checkLandingsite/4, landing_site/4]).
 :- use_module(minput).
+:- use_module(mbezier).
 :- dynamic landing_site/4.
 
-% +------------------------------------------+
-% |             INPUT CHECKS                 |
-% +------------------------------------------+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%              INPUT CHECKS                 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % checks if the start location of the shuttle (X coordinate) is lower or equal then the
 %   width of the zone and positive
 checkX(X):-
