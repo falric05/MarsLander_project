@@ -51,13 +51,19 @@ checkInput:-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%              BEZIER tests                 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% test the extraction of of timestamp in [0,1]
 :- get_tInterval([H1, H2, H3| T]), tail(T, R), write("["), 
    write(H1), write(", "), write(H2), write(", "), write(H3), 
    write(", ..., "), write(R), write("]"),
    write("\n<=> t interval for Bezier curve approximation checked\n\n").
+
+%%% test the extraction of points P from the surface
 :- get_Plist(P), write(P), write("\n<=> p ponts for Bezier curve approximation checked\n\n").
-:- get_tInterval([H|_]), get_Plist(P), bezier(H, P, R),
-   write("\n<=> "),write(R).
+
+%%% test the bezier curve in t = T over the points P
+:- get_tInterval([T|_]), get_Plist(P), bezier(T, P, R),
+   write(R),write("\n<=> point at t = "),writeln(T).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
