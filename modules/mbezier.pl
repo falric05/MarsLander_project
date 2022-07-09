@@ -8,34 +8,36 @@ t_size(100).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% 			P POINTS
-%% computes p list
+%% this return the P list of keypoints for computing the bezier curve
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% _case 1_: if the lander is on the left of landing site
 get_Plist(Pout):- mars_zone(L), 
     lander(Xl, Yl, _), landing_site(X0, Y, _, Y), bl_landing_site(BL),
     Xl < X0, !, Xend is BL / 2 + X0, Yend is Y + (Y / 10),
     get_Plist(L, [point(Xl, Yl)], Xl, Xend, P),
     append(P, [point(Xend, Yend), point(Xend, Y)], Pout).
-
+%%% _case 2_: if the lander is inside of the landing site
 get_Plist(Pout):- 
     lander(Xl, Yl, _), landing_site(X0, Y, X1, Y), bl_landing_site(BL),
     Xl < X1, !, Xend is (BL / 2) + X0, Yend is Y + (Y / 10),
     append([], [point(Xl, Yl), point(Xend, Yend), point(Xend, Y)], Pout).
-
+%%% _case 3_: if the lander is on the right of landing site
 get_Plist(Pout):- mars_zone(L), 
     lander(Xl, Yl, _), landing_site(X0, Y, _, Y), bl_landing_site(BL),
  	Xend is BL / 2 + X0, Yend is (Y / 10),
     get_Plist(L, [point(Xend, Yend), point(Xend, Y)], Xl, Xend, P),
     append(P, [point(Xl, Yl)], Pout).
 
-get_Plist([], Pin, _, _, Pin):- !.
 
+%%% helper procedure for get_Plist(Pout)
+get_Plist([], Pin, _, _, Pin):- !.
 get_Plist([surface(X,Y)|T], Pin, Xstart, Xend, Pout):- 
     X > Xstart, X < Xend, !, Ydb is Y * 2,
     append(Pin,[point(X, Ydb)],P), 
     get_Plist(T, P, Xstart, Xend, Pout).
-
 get_Plist([surface(_, _)|T], Pin, Xstart, Xend, Pout):- 
     get_Plist(T, Pin, Xstart, Xend, Pout).
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% 			T INTERVALS
@@ -64,7 +66,10 @@ get_tInterval(T):- get_step(S), L is (0 + S), range(L, 1, S, T).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 /* this returns the point over the bezier curve defined by the keypoints P 
- * corresponding to timestamp T 
+ * corresponding to timestamp T.
+ * the computation of the curve is peeformed by the recursive definition (you can 
+ * find in 
+ * https://en.wikipedia.org/wiki/B%C3%A9zier_curve#Constructing_B%C3%A9zier_curves)
  */
 bezier(_, [point(X, Y)], [point(X, Y)]).
 bezier(T, PList, B):- 
