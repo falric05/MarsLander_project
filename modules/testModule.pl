@@ -56,6 +56,8 @@ checkInput:-
    write(", ..., "), write(R), write("]"),
    write("\n<=> t interval for Bezier curve approximation checked\n\n").
 :- get_Plist(P), write(P), write("\n<=> p ponts for Bezier curve approximation checked\n\n").
+:- get_tInterval([T| _]), get_Plist(P), bezier(T, P, R),
+   write("\n<=> "),write(R).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

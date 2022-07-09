@@ -1,4 +1,4 @@
-:- module(mbezier, [get_Plist/1, get_tInterval/1]).
+:- module(mbezier, [get_Plist/1, get_tInterval/1, bezier/3]).
 :- use_module(minput).
 
 
@@ -46,9 +46,16 @@ range(H, H, _, [H]):- !.
 range(L, H, _, [H]):- L > H, !.
 range(L, H, S, Out1):- L1 is L + S, range(L1, H, S, Out0), append([L], Out0, Out1).
 
-get_tInterval(T):- get_step(S), L is 0.0 + S, range(L, 1.0, S, T).
+get_tInterval(T):- get_step(S), L is (0 + S), range(L, 1, S, T).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% computes the bezier curve
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+bezier(_, [P0], [P0]).
+bezier(T, PList, B):- 
+    tailLeft(PList, Pl), tailRight(PList, Pr),
+    bezier(T, Pl, Bl), bezier(T, Pr, Br), Tc is 1-T,
+    scalarDot(Tc, Bl, TcBl), 
+    scalarDot(T, Br, TBr),
+    vectorSum(TcBl, TBr, B).
