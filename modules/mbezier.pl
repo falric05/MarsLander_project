@@ -52,7 +52,7 @@ get_tInterval(T):- get_step(S), L is (0 + S), range(L, 1, S, T).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% computes the bezier curve
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-bezier(_, [P0], [P0]).
+bezier(_, [surface(P0)], surface([P0])).
 bezier(T, PList, B):- 
     tailLeft(PList, Pl), tailRight(PList, Pr),
     bezier(T, Pl, Bl), bezier(T, Pr, Br), Tc is 1-T,

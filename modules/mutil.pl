@@ -19,13 +19,18 @@ tailLeft(L, T):-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%% This function return the scalar product with a vector
-%%% e.g. scalarDot(2, [1,2], [2,4]).
+%%% e.g. scalarDot(2, [point(1,2), point(3,2)], 
+%%%                   [point(2,4), point(6,4)]).
 scalarDot(_, [], []).
-scalarDot(Lmb, [H|T], [H2| R1]):-
-    scalarDot(Lmb, T, R1), H2 is (Lmb*H).
+scalarDot(Lmb, [point(X, Y)|T], [point(X2, Y2)| R1]):-
+    scalarDot(Lmb, T, R1), 
+    X2 is (Lmb*X), Y2 is (Lmb*Y).
 
 %%% This function return the vector sum of two vectors
-%%% e.g. scalarDot(2, [1,2], [2,4]).
+%%% e.g. vectorSum([point(1,2),point(3,2)], 
+%%%                [point(3,2),point(1,2)], 
+%%%                [point(4,4), point(4,4)]).
 vectorSum([], [], []).
-vectorSum([H1|T1], [H2|T2], [HR|R]):-
-    vectorSum(T1, T2, R), HR is (H1+H2).
+vectorSum([point(X1, Y1)|T1], [point(X2, Y2)|T2], [point(XR, YR)|R]):-
+    vectorSum(T1, T2, R), 
+    XR is (X1+X2), YR is (Y1+Y2).
