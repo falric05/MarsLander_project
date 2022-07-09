@@ -4,12 +4,12 @@ tail([H], H):- !.
 tail([_|T], R):- tail(T, R).
 
 %%% This function return the right tail of a list
-%%% e.g. [1,2,3,4] -> [2,3,4]
+%%% e.g. tailRight([1,2,3,4], [2,3,4])
 tailRight([_], []):- !.
 tailRight([_|T], T).
 
 %%% This function return the left tail of a list
-%%% e.g. [1,2,3,4] -> [1,2,3]
+%%% e.g. tailLeft([1,2,3,4], [1,2,3])
 tailLeft([_], []):- !.
 tailLeft(L, T):- 
     reverse(L, Linv), tailRight(Linv, Tinv), reverse(Tinv, T).
