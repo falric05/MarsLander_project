@@ -25,5 +25,5 @@ mars_zone([
 lander(500, 2000, 4500).
 
 %%% The game simulates a free fall without atmosphere. Gravity on Mars is 3.711 m/s².
-%%% ISSUE: try to fix the language grammar for float number 
+%%% NOTE: try to fix the language grammar for float number 
 g(3.711).

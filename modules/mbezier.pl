@@ -1,9 +1,9 @@
-:- module(mbezier, [get_Plist/1, get_tInterval/1, bezier/3]).
+:- module(mbezier, [get_Plist/1, get_kInterval/1, bezier/3]).
 :- use_module(minput).
 
 
-%%% The size of t interval for approximate the Beziér curve
-t_size(100).
+%%% The size of k interval for approximate the Beziér curve
+k_size(20).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -40,14 +40,14 @@ get_Plist([surface(_, _)|T], Pin, Xstart, Xend, Pout):-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% 			T INTERVALS
-%% computes intervals of t (as a list)
+%% 			k INTERVALS
+%% computes intervals of k (as a list)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 /* This is used to extract the steps according to the size of the ivervalt in [0,1]
  * chosen. 
- * e.g. t_size(100). => get_step(0.01)
+ * e.g. k_size(100). => get_step(0.01)
  */
-get_step(S):- t_size(Size), S is 1 / Size.
+get_step(S):- k_size(Size), S is 1 / Size.
 
 /* This returns a list with values v s.t. L < v <= H of a size S that can be obtained
  * using get_step(S)
@@ -58,7 +58,7 @@ range(L, H, S, Out1):- L1 is L + S, range(L1, H, S, Out0), append([L], Out0, Out
 
 /* This returns a list with values v s.t. 0 < v <= 1 of a size s where get_step(s)
  */
-get_tInterval(T):- get_step(S), L is (0 + S), range(L, 1, S, T).
+get_kInterval(K):- get_step(S), L is (0 + S), range(L, 1, S, K).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -72,8 +72,8 @@ get_tInterval(T):- get_step(S), L is (0 + S), range(L, 1, S, T).
  * https://en.wikipedia.org/wiki/B%C3%A9zier_curve#Constructing_B%C3%A9zier_curves)
  */
 bezier(_, [point(X, Y)], [point(X, Y)]).
-bezier(T, PList, B):- 
+bezier(K, PList, B):- 
     tailLeft(PList, Pl), tailRight(PList, Pr),
-    bezier(T, Pl, Bl), bezier(T, Pr, Br), 
-    Tc is 1-T,
-    scalarDot(Tc, Bl, TcBl), scalarDot(T, Br, TBr), vectorSum(TcBl, TBr, B).
+    bezier(K, Pl, Bl), bezier(K, Pr, Br), 
+    Kc is 1-K,
+    scalarDot(Kc, Bl, KcBl), scalarDot(K, Br, KBr), vectorSum(KcBl, KBr, B).
