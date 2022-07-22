@@ -11,7 +11,6 @@ ML = []
 
 
 def __readFile(in_file):
-    print(os.path.exists(in_file))
     assert(os.path.exists(in_file))
     f = open(in_file, "r")
     n = int(f.readline())

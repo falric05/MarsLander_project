@@ -23,9 +23,6 @@ mars_zone([
 % Start position of the lander and amount of carburants in litres
 lander(500, 2000, 4500).
 
-% The game simulates a free fall without atmosphere. Gravity on Mars is 3.711 m/s².
-g(3.711).
-
 % +------------------------------------------+
 % |             INPUT CHECKS                 |
 % +------------------------------------------+
