@@ -11,6 +11,7 @@ from utils.args import parse_args
 POINTS = []
 ML = []
 lander_marker = None
+lander_marker_size = 900
 
 
 def __getLanderMarker():
@@ -35,11 +36,13 @@ def __readFile(in_file):
 def main(args):
     def __animate_surface(i):
         ax.clear()
-        ax.set_ylim([0, 3000])
+        ax.set_ylim([0, 3200])
         ax.set_xlim([0, 7000])
+        ax.set_facecolor('black')
         ax.plot([p[0] for p in POINTS],
                 [p[1] for p in POINTS], color='r')
-        ax.scatter(ML[0], ML[1], marker=lander_marker, s=1500, color='purple')
+        ax.scatter(ML[0], ML[1], marker=lander_marker, 
+                   s=lander_marker_size, color='purple')
         ax.set_title(args.data)
 
     file = os.path.join('MarsLander_project', 'input', args.data + '.txt')
