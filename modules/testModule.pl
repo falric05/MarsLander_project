@@ -66,6 +66,11 @@ checkInput:-
 :- get_kInterval([K|_]), get_Plist(P), bezier(K, P, R),
    write(R),write("\n<=> point at k = "),writeln(K).
 
+testBezier :- 
+    mars_zone(S),                   % get the zone
+    bl_landing_site(BL),            % get the landing site
+    checkLandingsite(S, BL, _, _),  % check if it is correct
+    get_Plist(P), write(P).         % returns the P list
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

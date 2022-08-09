@@ -3,21 +3,29 @@
 :- use_module(mlander).
 
 %%% The size of k interval for approximate the Beziér curve
-k_size(20).
+k_size(36).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% 			P POINTS
 %% this return the P list of keypoints for computing the bezier curve
+%% FIXME: P list wrong missing a point and X coordinates wrong
+%% SOLVED: problem was the non correspondance between txt file and minput
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% _case 1_: if the lander is on the left of landing site
-get_Plist(Pout):- mars_zone(L), 
-    lander(Xl, Yl, _, _, _, _, _), landing_site(X0, Y, _, Y), bl_landing_site(BL),
-    Xl < X0, !, Xend is BL / 2 + X0, Yend is Y + (Y / 10),
+get_Plist(Pout):- 
+    mars_zone(L), 
+    lander(Xl, Yl, _, _, _, _, _), 
+    write(Xl), write(' '), 
+    landing_site(X0, Y, _, Y), write(X0),
+    bl_landing_site(BL), 
+    Xl < X0, !,           
+    Xend is BL / 2 + X0, Yend is Y + 1,
     get_Plist(L, [point(Xl, Yl)], Xl, Xend, P),
     append(P, [point(Xend, Yend), point(Xend, Y)], Pout).
 %%% _case 2_: if the lander is inside of the landing site
 get_Plist(Pout):- 
+    write("miao"),
     lander(Xl, Yl, _, _, _, _, _), landing_site(X0, Y, X1, Y), bl_landing_site(BL),
     Xl < X1, !, Xend is (BL / 2) + X0, Yend is Y + (Y / 10),
     append([], [point(Xl, Yl), point(Xend, Yend), point(Xend, Y)], Pout).
@@ -30,10 +38,12 @@ get_Plist(Pout):- mars_zone(L),
 
 
 %%% helper procedure for get_Plist(Pout)
+%%% foreach surface point if it is between the landing surface and the lander position
+%%% I should consider it. A safe distance of 10 is considered
 get_Plist([], Pin, _, _, Pin):- !.
 get_Plist([surface(X,Y)|T], Pin, Xstart, Xend, Pout):- 
-    X > Xstart, X < Xend, !, Ydb is Y * 2,
-    append(Pin,[point(X, Ydb)],P), 
+    X > Xstart, X < Xend, !, Ysafe is Y + 10,
+    append(Pin,[point(X, Ysafe)],P), 
     get_Plist(T, P, Xstart, Xend, Pout).
 get_Plist([surface(_, _)|T], Pin, Xstart, Xend, Pout):- 
     get_Plist(T, Pin, Xstart, Xend, Pout).

@@ -13,12 +13,13 @@ bl_landing_site(1000).
  * For the first point, landX = 0 and for the last point, landX = 6999
  */
 mars_zone([
-     surface(0, 1500),
-     surface(1000, 2000),
-     surface(2000, 500),
-     surface(3500, 500),
-     surface(5000, 1500),
-     surface(6999, 1000)
+     surface(0, 100),
+     surface(1000, 500),
+     surface(1500, 1500),
+     surface(3000, 1000),
+     surface(4000, 150),
+     surface(5500, 150),
+     surface(6999, 800)
 ]).
 
 % %%% Start position of the lander and amount of carburants in litres
@@ -26,5 +27,5 @@ mars_zone([
 
 %%% The game simulates a free fall without atmosphere. Gravity on Mars is 3.711 m/s².
 %%% FIXME: try to fix the language grammar for float number 
-%%%       (solved with better sintax for Prolog extension)
+%%% SOLVED: with better sintax for Prolog extension
 g(3.711).
