@@ -26,4 +26,5 @@ mars_zone([
 
 %%% The game simulates a free fall without atmosphere. Gravity on Mars is 3.711 m/s².
 %%% FIXME: try to fix the language grammar for float number 
+%%%       (solved with better sintax for Prolog extension)
 g(3.711).
