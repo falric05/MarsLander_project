@@ -1,4 +1,5 @@
 :- use_module(minput).
+:- use_module(mlander).
 :- use_module(mcheck).
 :- use_module(mbezier).
 :- use_module(mutil).
@@ -31,7 +32,7 @@ testCheckLandingSite:-
 %   - Y: y coordinate for the position of Mars Lander 
 %   - F: amount of fuel
 checkInput:-
-    lander(X, Y, F),
+    lander(X, Y, F, _, _, _, _),
     checkX(X),
     checkY(Y),
     checkF(F),

@@ -1,6 +1,6 @@
 :- module(mbezier, [get_Plist/1, get_kInterval/1, bezier/3]).
 :- use_module(minput).
-
+:- use_module(mlander).
 
 %%% The size of k interval for approximate the Beziér curve
 k_size(20).
@@ -12,18 +12,18 @@ k_size(20).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% _case 1_: if the lander is on the left of landing site
 get_Plist(Pout):- mars_zone(L), 
-    lander(Xl, Yl, _), landing_site(X0, Y, _, Y), bl_landing_site(BL),
+    lander(Xl, Yl, _, _, _, _, _), landing_site(X0, Y, _, Y), bl_landing_site(BL),
     Xl < X0, !, Xend is BL / 2 + X0, Yend is Y + (Y / 10),
     get_Plist(L, [point(Xl, Yl)], Xl, Xend, P),
     append(P, [point(Xend, Yend), point(Xend, Y)], Pout).
 %%% _case 2_: if the lander is inside of the landing site
 get_Plist(Pout):- 
-    lander(Xl, Yl, _), landing_site(X0, Y, X1, Y), bl_landing_site(BL),
+    lander(Xl, Yl, _, _, _, _, _), landing_site(X0, Y, X1, Y), bl_landing_site(BL),
     Xl < X1, !, Xend is (BL / 2) + X0, Yend is Y + (Y / 10),
     append([], [point(Xl, Yl), point(Xend, Yend), point(Xend, Y)], Pout).
 %%% _case 3_: if the lander is on the right of landing site
 get_Plist(Pout):- mars_zone(L), 
-    lander(Xl, Yl, _), landing_site(X0, Y, _, Y), bl_landing_site(BL),
+    lander(Xl, Yl, _, _, _, _, _), landing_site(X0, Y, _, Y), bl_landing_site(BL),
  	Xend is BL / 2 + X0, Yend is (Y / 10),
     get_Plist(L, [point(Xend, Yend), point(Xend, Y)], Xl, Xend, P),
     append(P, [point(Xl, Yl)], Pout).

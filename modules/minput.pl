@@ -1,4 +1,4 @@
-:- module(input, [zone/2, bl_landing_site/1, mars_zone/1, lander/3, g/1]).
+:- module(input, [zone/2, bl_landing_site/1, mars_zone/1, g/1]).
 
 %%% The zone is 7000m wide and 3000m high.
 zone(7000, 3000).
@@ -21,9 +21,9 @@ mars_zone([
      surface(6999, 1000)
 ]).
 
-%%% Start position of the lander and amount of carburants in litres
-lander(500, 2000, 4500).
+% %%% Start position of the lander and amount of carburants in litres
+% lander(500, 2000, 4500).
 
 %%% The game simulates a free fall without atmosphere. Gravity on Mars is 3.711 m/s².
-%%% NOTE: try to fix the language grammar for float number 
+%%% FIXME: try to fix the language grammar for float number 
 g(3.711).
