@@ -11,10 +11,11 @@ g(3.711).
 
 %%% Mars surface segments anchor points
 mars_zone([
-	surface(0, 1500),
-	surface(1000, 2000),
-	surface(2000, 500),
-	surface(3500, 500),
-	surface(5000, 1500),
-	surface(6999, 1000)
+	surface(0, 100),
+	surface(1000, 500),
+	surface(1500, 1500),
+	surface(3000, 1000),
+	surface(4000, 150),
+	surface(5500, 150),
+	surface(6999, 800)
 ]).
