@@ -17,4 +17,4 @@ mars_zone([
 	surface(3500, 500),
 	surface(5000, 1500),
 	surface(6999, 1000)
-])
+]).

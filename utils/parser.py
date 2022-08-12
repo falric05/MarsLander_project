@@ -32,7 +32,7 @@ def parse(url_inputFile):
             line += ","
         line += "\n" 
         minput_lines.append(line)
-    minput_lines.append("])")
+    minput_lines.append("]).")
 
     ### store minput.pl
     minput_url = os.path.join('MarsLander_project', 'modules', 'minput.pl')
@@ -42,14 +42,20 @@ def parse(url_inputFile):
     
     # # #
 
-    ### construct mlander
+    ### construct mlander.pl
     mlander_lines = [
-        ":- module(lander, [lander/7]).",
-        "%% Start position of the lander and amount of carburants in litres",
+        ":- module(lander, [lander/7]).\n",
+        "%% Start position of the lander and amount of carburants in litres\n",
         "lander("
     ]
     for i in range(len(lander)):
         mlander_lines[-1] += lander[i]
         if i < len(lander) - 1:
             mlander_lines[-1] += ", "
-    mlander_lines[-1] += ")."
+    mlander_lines[-1] += ").\n"
+
+    ### store mlander.pl
+    mlander_url = os.path.join('MarsLander_project', 'modules', 'mlander.pl')
+    with open(mlander_url, 'w') as f:
+        f.writelines(mlander_lines)
+        f.close()

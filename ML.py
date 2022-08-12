@@ -51,29 +51,30 @@ def main(args):
     lander_marker = __getLanderMarker()
 
     ### read input file
-    file = os.path.join('MarsLander_project', 'data', args.data + '.txt')
-    POINTS, ML = __readFile(file)
-    parse(file)
-    print(ML)
+    input_file = os.path.join('MarsLander_project', 'data', args.data + '.txt')
+    POINTS, ML = __readFile(input_file)
+
+    ### parse input file
+    parse(input_file)
 
     ### game loop
     mlander_url = os.path.join('MarsLander_project', 'modules', 'mlander.pl')
     for i in range(1):
         ### write game informations in the file mlander.pl
         ### read from mlander
-        file = open(mlander_url, 'r')
-        lines = file.readlines()
+        input_file = open(mlander_url, 'r')
+        lines = input_file.readlines()
         lines = lines[:-1]
         lines.append('lander('+str(ML[-1][0])+', ' +str(ML[-1][1])+', ' +\
             str(ML[-1][2])+', ' +str(ML[-1][3])+', ' +str(ML[-1][4])+', ' +\
                 str(ML[-1][5])+', ' +str(ML[-1][6])+').')
-        file.close()
+        input_file.close()
 
         ### make prediction
 
         ### print results
-        file = open(mlander_url,'w')
-        file.writelines(lines)
+        input_file = open(mlander_url,'w')
+        input_file.writelines(lines)
         
     fig, ax = plt.subplots(1, 1)
     fig.set_size_inches(8,4)
