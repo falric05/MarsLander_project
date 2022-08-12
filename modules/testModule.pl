@@ -32,7 +32,7 @@ testCheckLandingSite:-
 %   - Y: y coordinate for the position of Mars Lander 
 %   - F: amount of fuel
 checkInput:-
-    lander(X, Y, F, _, _, _, _),
+    lander(X, Y, _, _, F, _, _),
     checkX(X),
     checkY(Y),
     checkF(F),
