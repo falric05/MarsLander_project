@@ -9,6 +9,7 @@ import os
 from utils.args import parse_args
 from utils.parser import parse
 
+
 POINTS = []
 ML = []
 lander_marker = None
@@ -71,6 +72,7 @@ def main(args):
         input_file.close()
 
         ### make prediction
+        os.system('swipl -s .\MarsLander_project\modules\msolve.pl -g predict')
 
         ### print results
         input_file = open(mlander_url,'w')
