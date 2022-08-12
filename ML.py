@@ -7,6 +7,7 @@ from turtle import color
 import os
 
 from utils.args import parse_args
+from utils.parser import parse
 
 POINTS = []
 ML = []
@@ -52,6 +53,7 @@ def main(args):
     ### read input file
     file = os.path.join('MarsLander_project', 'data', args.data + '.txt')
     POINTS, ML = __readFile(file)
+    parse(file)
     print(ML)
 
     ### game loop
