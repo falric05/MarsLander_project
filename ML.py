@@ -36,6 +36,28 @@ def __readFile(in_file):
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
+def next_round(ML, r, p):
+    s0 = [ML[-1][0], ML[-1][1]]
+    v0 = [ML[-1][2], ML[-1][3]]
+    a  = [0, (-3.711+p)]
+    m = ML[-1][4]
+    ML.append([
+        s0[0],                      # same x as before
+        .5 * a[1] + v0[1] + s0[1],  # new y position
+        0,                          # 0 horizontal speed
+        v0[1] + a[1],               # new vertical speed
+        m - int(.5 * a[1] + v0[1]),  # new amount of liters
+        r,
+        p
+    ])
+
+def land_status(ML):
+    
+    if ML[-1][5] == 0 
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+
 def main(args):
     def __animate_surface(i):
         ax.clear()
@@ -60,7 +82,7 @@ def main(args):
 
     ### game loop
     mlander_url = os.path.join('MarsLander_project', 'modules', 'mlander.pl')
-    for i in range(1):
+    for i in range(100):
         ### write game informations in the file mlander.pl
         ### read from mlander
         input_file = open(mlander_url, 'r')
@@ -72,16 +94,21 @@ def main(args):
         input_file.close()
 
         ### make prediction
-        os.system('swipl -s .\MarsLander_project\modules\msolve.pl -g predict')
+        # os.system('swipl -s .\MarsLander_project\modules\msolve.pl -g predict')
+        out_line = os.popen('swipl -s .\MarsLander_project\modules\msolve.pl -g predict').read().split()
+        print(out_line)
+        r = int(out_line[0])
+        p = int(out_line[1])
 
         ### print results
         input_file = open(mlander_url,'w')
         input_file.writelines(lines)
+        next_round(ML, r, p)
         
     fig, ax = plt.subplots(1, 1)
     fig.set_size_inches(8,4)
     
-    ani = anm(fig, __animate_surface, frames=1, interval=500, repeat=False)
+    ani = anm(fig, __animate_surface, frames=100, interval=500, repeat=True)
     ani.save('simple_animation.gif')
     plt.show()
     plt.close()

@@ -18,17 +18,34 @@ solve:-
 	checkInput, write("Input checked\n")
 	.
 
-predict:-
-	mars_zone(S), 
-    bl_landing_site(BL), 
-    checkLandingsite(S, BL, _, _),
-	landing_site(X1, _, X2, _), 
-	lander(Xl, _, _, _, _, _, _),
-	Xl > X1, Xl < X2, !,
-	write("Episode 1!"), halt.
+predict_ep1(Sv, P) :- 
+	Sv < -40, P < 4, !,
+	Pup is P + 1,
+	write(0), write(" "), write(Pup).
+
+predict_ep1(Sv, P) :- 
+	Sv > -39, P == 4,
+	Pdown is P - 1,
+	write(0), write(" "), write(Pdown).
+
+predict_ep1(_, P) :- 
+	write(0), write(" "), write(P).
+
 
 predict:-
 	mars_zone(S), 
     bl_landing_site(BL), 
     checkLandingsite(S, BL, _, _),
-	write("Episode 2-3!"), halt.
+	landing_site(X1, _, X2, _), 
+	lander(Xl, _, _, Sv, _, _, P),
+	Xl > X1, Xl < X2, !,
+	% write("Episode 1!"),
+	predict_ep1(Sv, P), 
+	halt.
+
+predict:-
+	mars_zone(S), 
+    bl_landing_site(BL), 
+    checkLandingsite(S, BL, _, _),
+	% write("Episode 2-3!"), 
+	halt.
