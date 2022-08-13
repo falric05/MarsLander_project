@@ -132,6 +132,7 @@ def main(args):
             str(ML[-1][2])+', ' +str(ML[-1][3])+', ' +str(ML[-1][4])+', ' +\
                 str(ML[-1][5])+', ' +str(ML[-1][6])+').')
         input_file.close()
+        print(ML[-1])
 
         ### make prediction
         # os.system('swipl -s .\MarsLander_project\modules\msolve.pl -g predict')
@@ -145,7 +146,6 @@ def main(args):
         input_file.writelines(lines)
         ML.append(next_round(ML[-1], r, p, t))
         lnd_status = land_status(ML[-2], flatArea)
-        print("")
         print("land status", lnd_status)
         print("")
         if not lnd_status == 0:

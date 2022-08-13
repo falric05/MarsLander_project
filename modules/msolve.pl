@@ -31,7 +31,6 @@ predict_ep1(Sv, P) :-
 predict_ep1(_, P) :- 
 	write(0), write(" "), write(P).
 
-
 predict:-
 	mars_zone(S), 
     bl_landing_site(BL), 
