@@ -24,7 +24,7 @@ predict_ep1(Sv, P) :-
 	write(0), write(" "), write(Pup).
 
 predict_ep1(Sv, P) :- 
-	Sv > -39, P == 4,
+	Sv > -39, P == 4, !,
 	Pdown is P - 1,
 	write(0), write(" "), write(Pdown).
 
