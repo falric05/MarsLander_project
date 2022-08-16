@@ -12,6 +12,7 @@ from utils.parser import parse
 
 POINTS = []
 ML = []
+F_land = False
 lander_marker = None
 lander_marker_size = 900
 
@@ -42,21 +43,6 @@ def __readFile(in_file):
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
-# def next_round(ml, r, p, t):
-#     s0 = [ml[0], ml[1]]
-#     a  = [0, p-3.711]
-#     print(a[1])
-#     m = ml[4]
-#     return [
-#         s0[0],                      # same x as before
-#         .5 * a[1]*(t**2) + s0[1],   # new y position
-#         0,                          # 0 horizontal speed
-#         a[1]*t,                     # new vertical speed
-#         m - int(.5 * a[1]),         # new amount of liters
-#         r,
-#         p
-#     ]
-
 def next_round(ml, r, p, t):
     t = 1
     s0 = [ml[0], ml[1]]
@@ -64,11 +50,11 @@ def next_round(ml, r, p, t):
     a  = [0, p-3.711]
     f = ml[4]
     return [
-        s0[0],                      # same x as before
-        .5 * a[1] + v0[1] + s0[1],   # new y position
-        0,                          # 0 horizontal speed
-        int(a[1] + v0[1]),                     # new vertical speed
-        f - p,         # new amount of liters
+        s0[0],                              # same x as before
+        int(.5 * a[1] + v0[1] + s0[1]),     # new y position
+        0,                                  # 0 horizontal speed
+        int(a[1] + v0[1]),                  # new vertical speed
+        f - p,                              # new amount of liters
         r,
         p
     ]
@@ -77,7 +63,17 @@ def next_round(ml, r, p, t):
 ### @retval 1  for correct landing
 ###         0  for in game status
 ###         -1 for destructive landing
-def land_status(ml, flatArea):
+def land_status(ps, ml, flatArea):
+    i = 0
+    F_esc = False
+    while i < len(ps) and not F_esc:
+        if ml[0] <= ps[i][0] and not ps[i-1][1] == ps[i][1]: ### and not in a flatarea
+            safe_alt = ((ml[0]-ps[i][0]) / (ps[i-1][0]-ps[i][0])) * (ps[i-1][1]-ps[i][1])
+            if ml[1] < safe_alt + ps[i][1]:
+                return -1
+            else:
+                F_esc = True
+        i += 1
     s0 = [ml[0], ml[1]]
     v0 = [ml[2], ml[3]]
     r = ml[5]
@@ -89,8 +85,10 @@ def land_status(ml, flatArea):
             if r == 0 and abs(v0[0]) <= 20 and abs(v0[1]) <= 40:
                 return 1
             else:
-                print(ml)
-                return -1        
+                return -1
+    ### if the lander go under 0
+    elif s0[1] < 0:
+        return -1
     return 0
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
@@ -104,7 +102,19 @@ def main(args):
         ax.plot([p[0] for p in POINTS],
                 [p[1] for p in POINTS], color='r')
         ax.scatter(ML[i][0], ML[i][1], marker=lander_marker, 
-                   s=lander_marker_size, color='purple')
+                   s=lander_marker_size, color='w')
+        ax.text(0.05, 0.9, 't: '+str(i)+'\nhspeed: '+str(ML[i][2])+'\nvspeed: '+str(ML[i][3]),
+                horizontalalignment='left', verticalalignment='center', transform=ax.transAxes,
+                color='w')
+        if i == len(ML)-1:
+            if F_land:
+                ax.text(0.05, 0.8, 'landing success!',
+                        horizontalalignment='left', verticalalignment='center', transform=ax.transAxes,
+                        color='g')
+            else:
+                ax.text(0.05, 0.8, 'landing failed!',
+                        horizontalalignment='left', verticalalignment='center', transform=ax.transAxes,
+                        color='r')
         ax.set_title(args.data)
 
     ### get the lander png image to use it as marker for plot
@@ -145,19 +155,23 @@ def main(args):
         input_file = open(mlander_url,'w')
         input_file.writelines(lines)
         ML.append(next_round(ML[-1], r, p, t))
-        lnd_status = land_status(ML[-2], flatArea)
+        lnd_status = land_status(POINTS, ML[-1], flatArea)
         print("land status", lnd_status)
         print("")
-        if not lnd_status == 0:
+        t+=1
+        if lnd_status == 1:
             F_esc = True
-        else:
-            t += 1 
+            F_land = True
+            ML[-1][1] = flatArea[2]
+        elif lnd_status == -1:
+            F_land = False
+            F_esc = True
         
     fig, ax = plt.subplots(1, 1)
     fig.set_size_inches(8,4)
     
     
-    ani = anm(fig, __animate_surface, frames=t, interval=250, repeat=False)
+    ani = anm(fig, __animate_surface, frames=t+1, interval=500, repeat=False)
     ani.save('marsLander.gif')
     plt.show()
     plt.close()

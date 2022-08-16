@@ -18,6 +18,8 @@ solve:-
 	checkInput, write("Input checked\n")
 	.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Simple case episode 1 when lander is over flat area
 predict_ep1(Sv, P) :- 
 	Sv < -40, P < 4, !,
 	Pup is P + 1,
@@ -30,6 +32,11 @@ predict_ep1(Sv, P) :-
 
 predict_ep1(_, P) :- 
 	write(0), write(" "), write(P).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Episode 2 case
+predict_ep2 :-
+	write(0), write(" "), write(0).
 
 predict:-
 	mars_zone(S), 
@@ -47,4 +54,5 @@ predict:-
     bl_landing_site(BL), 
     checkLandingsite(S, BL, _, _),
 	% write("Episode 2-3!"), 
+	predict_ep2, 
 	halt.
