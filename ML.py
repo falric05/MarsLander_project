@@ -47,14 +47,21 @@ def next_round(ml, r, p, t):
     t = 1
     s0 = [ml[0], ml[1]]
     v0 = [ml[2], ml[3]]
-    a  = [0, p-3.711]
     f = ml[4]
+    f1 = 0
+    if f > p:
+        a  = [0, p-3.711]
+        f1 += f - p
+    elif f > 0:
+        a  = [0, f-3.711]
+    else:
+        a  = [0, -3.711]
     return [
         s0[0],                              # same x as before
         int(.5 * a[1] + v0[1] + s0[1]),     # new y position
         0,                                  # 0 horizontal speed
         int(a[1] + v0[1]),                  # new vertical speed
-        f - p,                              # new amount of liters
+        f1,                                 # new amount of liters
         r,
         p
     ]

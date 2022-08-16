@@ -38,6 +38,9 @@ predict_ep1(_, P) :-
 predict_ep2 :-
 	write(0), write(" "), write(0).
 
+predict_ep2(P, Sv, Sh) :-
+	write(0), write(" "), write(0).
+
 predict:-
 	mars_zone(S), 
     bl_landing_site(BL), 
@@ -53,6 +56,8 @@ predict:-
 	mars_zone(S), 
     bl_landing_site(BL), 
     checkLandingsite(S, BL, _, _),
+	landing_site(X1, Y1, X2, Y1), 
+	lander(Xl, _, _, Sv, _, _, P),
 	% write("Episode 2-3!"), 
 	predict_ep2, 
 	halt.
