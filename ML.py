@@ -1,4 +1,5 @@
 import numpy as np
+import time
 from matplotlib import pyplot as plt
 from matplotlib.animation import FuncAnimation as anm 
 from svgpathtools import svg2paths
@@ -43,25 +44,29 @@ def __readFile(in_file):
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
-def next_round(ml, r, p, t):
-    t = 1
+def next_round(ml, r, p):
+    r1 = (r + 90) * np.pi/180
+    # r1 = r * np.pi/180
     s0 = [ml[0], ml[1]]
     v0 = [ml[2], ml[3]]
     f = ml[4]
     f1 = 0
     if f > p:
-        a  = [0, p-3.711]
+        amod = p
         f1 += f - p
     elif f > 0:
-        a  = [0, f-3.711]
+        amod = f
     else:
-        a  = [0, -3.711]
+        amod = 0
+    a = [amod*np.cos(r1), amod*np.sin(r1) - 3.711]
+    # a = [amod+3.711, amod]
+    print('acc:',a)
     return [
-        s0[0],                              # same x as before
-        int(.5 * a[1] + v0[1] + s0[1]),     # new y position
-        0,                                  # 0 horizontal speed
-        int(a[1] + v0[1]),                  # new vertical speed
-        f1,                                 # new amount of liters
+        .5 * a[0] + v0[0] + s0[0],     # same x as before
+        .5 * a[1] + v0[1] + s0[1],     # new y position
+        a[0] + v0[0],                  # 0 horizontal speed
+        a[1] + v0[1],                  # new vertical speed
+        f1,                            # new amount of liters
         r,
         p
     ]
@@ -110,7 +115,10 @@ def main(args):
                 [p[1] for p in POINTS], color='r')
         ax.scatter(ML[i][0], ML[i][1], marker=lander_marker, 
                    s=lander_marker_size, color='w')
-        ax.text(0.05, 0.9, 't: '+str(i)+'\nhspeed: '+str(ML[i][2])+'\nvspeed: '+str(ML[i][3]),
+        ax.text(0.05, 0.9, 't: '+str(i)+'\nhspeed: '+str(round(ML[i][2], 2))+'\nvspeed: '+str(round(ML[i][3], 2)),
+                horizontalalignment='left', verticalalignment='center', transform=ax.transAxes,
+                color='w')
+        ax.text(0.75, 0.9, 'fuel: '+str(ML[i][4])+'\nrotate: '+str(ML[i][5])+'\npower: '+str(ML[i][6]),
                 horizontalalignment='left', verticalalignment='center', transform=ax.transAxes,
                 color='w')
         if i == len(ML)-1:
@@ -138,30 +146,32 @@ def main(args):
     mlander_url = os.path.join('MarsLander_project', 'modules', 'mlander.pl')
     t = 0
     F_esc = False
-    while t < 100 and not F_esc:
+    while t < 1000 and not F_esc:
         print('t=',t)
         ### write game informations in the file mlander.pl
         ### read from mlander
-        input_file = open(mlander_url, 'r')
-        lines = input_file.readlines()
+        mlander_file = open(mlander_url, 'r')
+        lines = mlander_file.readlines()
         lines = lines[:-1]
-        lines.append('lander('+str(ML[-1][0])+', ' +str(ML[-1][1])+', ' +\
-            str(ML[-1][2])+', ' +str(ML[-1][3])+', ' +str(ML[-1][4])+', ' +\
+        lines.append('lander('+str(round(ML[-1][0], 0))+', ' +str(round(ML[-1][1], 0))+', ' +\
+            str(round(ML[-1][2], 0))+', ' +str(round(ML[-1][3], 0))+', ' +str(round(ML[-1][4], 0))+', ' +\
                 str(ML[-1][5])+', ' +str(ML[-1][6])+').')
-        input_file.close()
+        mlander_file.close()
+        mlander_file = open(mlander_url,'w')
+        mlander_file.writelines(lines)
+        mlander_file.close()
         print(ML[-1])
 
         ### make prediction
         # os.system('swipl -s .\MarsLander_project\modules\msolve.pl -g predict')
+        # time.sleep(1)
         out_line = os.popen('swipl -s .\MarsLander_project\modules\msolve.pl -g predict').read().split()
         print(out_line)
         r = int(out_line[0])
         p = int(out_line[1])
 
         ### print results
-        input_file = open(mlander_url,'w')
-        input_file.writelines(lines)
-        ML.append(next_round(ML[-1], r, p, t))
+        ML.append(next_round(ML[-1], r, p))
         lnd_status = land_status(POINTS, ML[-1], flatArea)
         print("land status", lnd_status)
         print("")
@@ -173,12 +183,14 @@ def main(args):
         elif lnd_status == -1:
             F_land = False
             F_esc = True
-        
+    
+    if not F_esc:
+        F_land = False
     fig, ax = plt.subplots(1, 1)
     fig.set_size_inches(8,4)
     
     
-    ani = anm(fig, __animate_surface, frames=t+1, interval=500, repeat=False)
+    ani = anm(fig, __animate_surface, frames=t+1, interval=125, repeat=False)
     ani.save('marsLander.gif')
     plt.show()
     plt.close()

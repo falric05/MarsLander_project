@@ -1,7 +1,7 @@
-:- module(mcheck, [checkX/1, checkY/1, checkF/1, checkSurface/1, checkLandingsite/4, landing_site/4]).
+:- module(mcheck, [checkX/1, checkY/1, checkF/1, checkSurface/1, checkLandingsite/4, landing_site/3]).
 :- use_module(minput).
-:- use_module(mbezier).
-:- dynamic landing_site/4.
+:- use_module(mhelper).
+:- dynamic landing_site/3.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%              INPUT CHECKS                 
@@ -53,6 +53,6 @@ checkLandingsite([], _, _, _):-
     throw("Surfaces must contain a consistent landing site").
 checkLandingsite([surface(X, Y)|_], BL, X1, Y1):-
     Y1 == Y, LLS is X - X1, BL < LLS + 1, !, 
-    asserta(landing_site(X1, Y1, X, Y)).
+    asserta(landing_site(X1, X, Y)).
 checkLandingsite([surface(X, Y)|T], BL, _, _):-
     checkLandingsite(T, BL, X, Y).
