@@ -158,9 +158,14 @@ def main(args):
         mlander_file = open(mlander_url, 'r')
         lines = mlander_file.readlines()
         lines = lines[:-1]
-        lines.append('lander('+str(round(ML[-1][0], 0))+', ' +str(round(ML[-1][1], 0))+', ' +\
-            str(round(ML[-1][2], 0))+', ' +str(round(ML[-1][3], 0))+', ' +str(round(ML[-1][4], 0))+', ' +\
-                str(ML[-1][5])+', ' +str(ML[-1][6])+').')
+        lines.append('lander('+\
+            str(int(round(ML[-1][0], 0)))+', ' +\
+            str(int(round(ML[-1][1], 0)))+', ' +\
+            str(int(round(ML[-1][2], 0)))+', ' +\
+            str(int(round(ML[-1][3], 0)))+', ' +\
+            str(ML[-1][4])+', ' +\
+            str(ML[-1][5])+', ' +\
+            str(ML[-1][6])+').')
         mlander_file.close()
         mlander_file = open(mlander_url,'w')
         mlander_file.writelines(lines)

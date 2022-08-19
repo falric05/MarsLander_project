@@ -1,6 +1,6 @@
-:- module(mhelper, [danger_Vspeed/1, danger_Hspeed/1,
+:- module(mhelper, [danger_Vspeed/1, danger_Hspeed/2,
                     get_Plist/1, safe_alt/2, 
-                    p_up/2, p_down/2, r_left/2, r_right/2]).
+                    p_up/2, p_down/2, r_left/2, r_right/2, r_to_zero/2]).
 :- use_module(minput).
 :- use_module(mlander).
 :- use_module(mcheck).
@@ -12,8 +12,8 @@
 p_max_step(1).
 r_max_step(15).
 r_max_degree(45).
-danger_Vspeed(30).
-danger_Hspeed(20).
+danger_Vspeed(-30).
+danger_Hspeed(-20, 20).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% 			P POINTS
