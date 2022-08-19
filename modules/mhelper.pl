@@ -97,13 +97,9 @@ r_right(R, Rnew):-
 
 r_to_zero(0, 0).
 r_to_zero(R, Rnew):-
-    r_max_step(Sp), Sn is Sp * (-1),
-    R < Sp, R > Sn, !,
-    Rnew is 0.
-r_to_zero(R, Rnew):-
-    r_max_step(S), Sn is S * (-1),
-    R < Sn, !,
-    Rnew is R + S.
+    r_max_step(S),
+    R >= S, !,
+    Rnew is R - S.
 r_to_zero(R, Rnew):-
     r_max_step(S), 
-    Rnew is R - S.
+    Rnew is R + S.

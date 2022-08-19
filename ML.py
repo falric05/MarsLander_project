@@ -179,6 +179,7 @@ def main(args):
         print(out_line)
         r = int(out_line[0])
         p = int(out_line[1])
+        assert((abs(r - ML[-1][5]) <= 15) and (abs(p- ML[-1][6]) <= 1))
 
         ### print results
         ML.append(next_round(ML[-1], r, p))
