@@ -82,13 +82,15 @@ p_down(P, Pnew):-
 
 
 % r_left(90, 90).
-r_left(45, 45).
+r_left(D, D):-
+    r_max_degree(D).
 r_left(R, Rnew):- 
     r_max_step(S),
     Rnew is R + S.
 
 % r_right(-90, -90).
-r_right(-45, -45).
+r_right(D1, D1):-
+    r_max_degree(D), D1 is -1 * D.
 r_right(R, Rnew):- 
     r_max_step(S),
     Rnew is R - S.

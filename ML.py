@@ -1,5 +1,6 @@
 import numpy as np
 import time
+import matplotlib as mpl
 from matplotlib import pyplot as plt
 from matplotlib.animation import FuncAnimation as anm 
 from svgpathtools import svg2paths
@@ -19,11 +20,12 @@ lander_marker_size = 900
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
-def __getLanderMarker():
+def __getLanderMarker(r):
     lander_path = os.path.join('MarsLander_project', 'Images', 'lander.svg')
     assert(os.path.exists(lander_path))
     lander_path, attributes = svg2paths(lander_path)
     lander_marker = parse_path(attributes[0]['d'])
+    lander_marker = lander_marker.transformed(mpl.transforms.Affine2D().rotate_deg(r))
     return lander_marker
 
 def __readFile(in_file):
@@ -76,6 +78,8 @@ def next_round(ml, r, p):
 ###         0  for in game status
 ###         -1 for destructive landing
 def land_status(ps, ml, flatArea):
+    if ml[0] <= 0 or ml[1] <= 0:
+        return -1
     i = 0
     F_esc = False
     while i < len(ps) and not F_esc:
@@ -113,6 +117,7 @@ def main(args):
         ax.set_facecolor('black')
         ax.plot([p[0] for p in POINTS],
                 [p[1] for p in POINTS], color='r')
+        lander_marker = __getLanderMarker(ML[i][5])
         ax.scatter(ML[i][0], ML[i][1], marker=lander_marker, 
                    s=lander_marker_size, color='w')
         ax.text(0.05, 0.9, 't: '+str(i)+'\nhspeed: '+str(round(ML[i][2], 2))+'\nvspeed: '+str(round(ML[i][3], 2)),
@@ -133,7 +138,7 @@ def main(args):
         ax.set_title(args.data)
 
     ### get the lander png image to use it as marker for plot
-    lander_marker = __getLanderMarker()
+    # lander_marker = __getLanderMarker()
 
     ### read input file
     input_file = os.path.join('MarsLander_project', 'data', args.data + '.txt')
