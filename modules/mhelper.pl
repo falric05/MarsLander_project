@@ -11,7 +11,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 p_max_step(1).
 r_max_step(15).
-r_max_degree(45).
+% r_max_degree(45).
+% danger_Vspeed(-40).
+r_max_degree(30).
 danger_Vspeed(-30).
 danger_Hspeed(-20, 20).
 
