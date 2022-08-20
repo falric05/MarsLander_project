@@ -1,6 +1,12 @@
-:- module(mhelper, [danger_Vspeed/1, danger_Hspeed/2,
-                    get_Plist/1, safe_alt/2, 
-                    p_up/2, p_down/2, r_left/2, r_right/2, r_to_zero/2]).
+:- module(mhelper, [isOverLandingSite/1, 
+                    isFinishing/1,
+                    hasSafeSpeed/2,
+                    goesInWrongDirection/2,
+                    goesTooFastH/1,
+                    goesTooSlowH/1,
+                    angleToSlow/3,
+                    angleToLandingSite/2,
+                    powerToHover/2]).
 :- use_module(minput).
 :- use_module(mlander).
 :- use_module(mcheck).
@@ -9,99 +15,75 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% 			CONFIGS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-p_max_step(1).
-r_max_step(15).
-% r_max_degree(45).
-% danger_Vspeed(-40).
+speed_eps(5).
+y_eps(20).
+% p_max_step(1).
+% r_max_step(15).
 r_max_degree(30).
-danger_Vspeed(-30).
-danger_Hspeed(-20, 20).
+danger_Vspeed(40).
+danger_Hspeed(20).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+isOverLandingSite(Xl):-
+    landing_site(X0, X1, _), 
+    X0 < Xl, Xl < X1.
+
+isFinishing(Yl):-
+    landing_site(_, _, Y), y_eps(Yeps), 
+    YplusEps is Y + Yeps,  
+    Yl < YplusEps.
+
+hasSafeSpeed(Sh, Sv):-
+    abs(Sh, ShAbs), abs(Sv, SvAbs),
+    danger_Hspeed(DSh), danger_Vspeed(DSv), speed_eps(Eps),
+    DSh1 is DSh - Eps, DSv1 is DSv - Eps,
+    ShAbs =< DSh1, SvAbs =< DSv1.
+
+goesInWrongDirection(Xl, Sh):-
+    landing_site(X0, _, _), Xl < X0, Sh < 0, !. 
+goesInWrongDirection(Xl, Sh):-
+    landing_site(_, X1, _), X1 < Xl, Sh > 0.
+
+goesTooFastH(Sh):-
+    abs(Sh, ShAbs), 
+    danger_Hspeed(DSh), DSh1 is DSh * 4,
+    ShAbs > DSh1.
+
+goesTooSlowH(Sh):-
+    abs(Sh, ShAbs), 
+    danger_Hspeed(DSh), DSh1 is DSh * 2,
+    ShAbs < DSh1.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% 			P POINTS
-%% this return the P list of keypoints for computing the bezier curve
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% _case 1_: if the lander is on the left of landing site
-get_Plist(Pout):- 
-    mars_zone(L), 
-    lander(Xl, Yl, _, _, _, _, _), 
-    landing_site(X0, _, Y),
-    bl_landing_site(BL), 
-    Xl < X0, !,           
-    Xend is BL / 2 + X0, Yend is Y + 1,
-    get_Plist(L, [point(Xl, Yl)], Xl, Xend, P),
-    append(P, [point(Xend, Yend), point(Xend, Y)], Pout).
-%%% _case 2_: if the lander is inside of the landing site
-get_Plist(Pout):- 
-    lander(Xl, Yl, _, _, _, _, _), landing_site(X0, X1, Y), bl_landing_site(BL),
-    Xl < X1, !, Xend is (BL / 2) + X0, Yend is Y + (Y / 10),
-    append([], [point(Xl, Yl), point(Xend, Yend), point(Xend, Y)], Pout).
-%%% _case 3_: if the lander is on the right of landing site
-get_Plist(Pout):- mars_zone(L), 
-    lander(Xl, Yl, _, _, _, _, _), landing_site(X0, _, Y), bl_landing_site(BL),
- 	Xend is BL / 2 + X0, Yend is (Y / 10),
-    get_Plist(L, [point(Xend, Yend), point(Xend, Y)], Xl, Xend, P),
-    append(P, [point(Xl, Yl)], Pout).
 
+%%% returns the best angle to slow down marse lander
+%%% (the angle directing thrust in the opposition direction to the mvmt)
+angleToSlow(Sh, Sv, Rround):-
+    S2 is (Sh * Sh) + (Sv * Sv),
+    sqrt(S2, S), Sh_over_S is Sh / S,
+    asin(Sh_over_S, Rreal),
+    Rdeg is Rreal * 180 / pi, Rround is round(Rdeg).
+    % Rdeg is 0 * pi. 
 
-%%% helper procedure for get_Plist(Pout)
-%%% foreach surface point if it is between the landing surface and the lander position
-%%% I should consider it. A safe distance of 10 is considered
-get_Plist([], Pin, _, _, Pin):- !.
-get_Plist([surface(X,Y)|T], Pin, Xstart, Xend, Pout):- 
-    X > Xstart, X < Xend, !, Ysafe is Y + 10,
-    append(Pin,[point(X, Ysafe)],P), 
-    get_Plist(T, P, Xstart, Xend, Pout).
-get_Plist([surface(_, _)|T], Pin, Xstart, Xend, Pout):- 
-    get_Plist(T, Pin, Xstart, Xend, Pout).
+%%% returns the exact angle to compensate gravity while
+%%% going toward target
+get_angle(Xl, R, R1):-
+    landing_site(X0, _, _), Xl < X0, !,
+    R1 is -R.
+get_angle(Xl, R, R1):-
+    landing_site(_, X1, _), Xl > X1, !,
+    R1 is R.
+get_angle(_, _, 0).
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% 			SAFE ALTITUDE
-%% this return the Y coordinate where the lander should fly to stay safe
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-safe_alt_helper([], L, SafeAlt):-
-	max_list(L, SafeAlt).
+angleToLandingSite(Xl, R):-
+    g(G), G_over_4 is G / 4,
+    acos(G_over_4, Rreal),
+    Rdeg is Rreal * 180 / pi, 
+    Rround is round(Rdeg),
+    get_angle(Xl, Rround, R).
 
-safe_alt_helper([point(_, Y)|T], L, SafeAlt):-
-	safe_alt_helper(T, [Y|L], SafeAlt).
-
-safe_alt(Plist, SafeAlt) :-
-	safe_alt_helper(Plist, _, SafeAlt).
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% 			ACTIONS
-%% this return the Y coordinate where the lander should fly to stay safe
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-p_up(4, 4).
-p_up(P, Pnew):- 
-    p_max_step(S),
-    Pnew is P + S.
-
-p_down(0, 0).
-p_down(P, Pnew):- 
-    p_max_step(S),
-    Pnew is P - S.
-
-
-% r_left(90, 90).
-r_left(D, D):-
-    r_max_degree(D).
-r_left(R, Rnew):- 
-    r_max_step(S),
-    Rnew is R + S.
-
-% r_right(-90, -90).
-r_right(D1, D1):-
-    r_max_degree(D), D1 is -1 * D.
-r_right(R, Rnew):- 
-    r_max_step(S),
-    Rnew is R - S.
-
-r_to_zero(0, 0).
-r_to_zero(R, Rnew):-
-    r_max_step(S),
-    R >= S, !,
-    Rnew is R - S.
-r_to_zero(R, Rnew):-
-    r_max_step(S), 
-    Rnew is R + S.
+%%%  returns the thrust power needed to aim a null vertical speed
+powerToHover(Sv, P):-
+    Sv > 0, !, 
+    P is 3.
+powerToHover(_, 4).

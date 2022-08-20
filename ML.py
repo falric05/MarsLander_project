@@ -17,6 +17,8 @@ ML = []
 F_land = False
 lander_marker = None
 lander_marker_size = 900
+MAX_Y = 3000
+MAX_X = 7000
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
@@ -78,7 +80,7 @@ def next_round(ml, r, p):
 ###         0  for in game status
 ###         -1 for destructive landing
 def land_status(ps, ml, flatArea):
-    if ml[0] <= 0 or ml[1] <= 0:
+    if (ml[0] <= 0 or ml[1] <= 0) or (ml[0] >= MAX_X or ml[1] >= MAX_Y):
         return -1
     i = 0
     F_esc = False
@@ -179,7 +181,7 @@ def main(args):
         print(out_line)
         r = int(out_line[0])
         p = int(out_line[1])
-        assert((abs(r - ML[-1][5]) <= 15) and (abs(p- ML[-1][6]) <= 1))
+        # assert((abs(r - ML[-1][5]) <= 15) and (abs(p- ML[-1][6]) <= 1))
 
         ### print results
         ML.append(next_round(ML[-1], r, p))
