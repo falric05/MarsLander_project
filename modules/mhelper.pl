@@ -7,7 +7,8 @@
                     angleToSlow/3,
                     angleToLandingSite/2,
                     powerToHover/2,
-                    getNextAngle/3]).
+                    getNextAngle/3,
+                    getNextTPower/3]).
 :- use_module(minput).
 :- use_module(mlander).
 :- use_module(mcheck).
@@ -16,7 +17,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% 			CONFIGS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-speed_eps(5).
+speed_eps(3).
 y_eps(20).
 p_max_step(1).
 r_max_step(15).
@@ -102,3 +103,16 @@ getNextAngle(Rprev, Rdes, Rnew):-
 getNextAngle(Rprev, _, Rnew):-
     r_max_step(RMaxStep),
     Rnew is Rprev + RMaxStep.
+
+getNextTPower(Pprev, Pdes, Pdes):-
+    Pdiff is Pprev - Pdes,
+    abs(Pdiff, PdiffAbs), 
+    p_max_step(PMaxStep),
+    PdiffAbs =< PMaxStep, !.
+getNextTPower(Pprev, Pdes, Pnew):-
+    Pdes < Pprev, !,
+    p_max_step(PMaxStep),
+    Pnew is Pprev - PMaxStep.
+getNextTPower(Pprev, _, Pnew):-
+    p_max_step(PMaxStep),
+    Pnew is Pprev + PMaxStep.

@@ -66,10 +66,10 @@ def next_round(ml, r, p):
     # a = [amod+3.711, amod]
     print('acc:',a)
     return [
-        .5 * a[0] + v0[0] + s0[0],     # same x as before
-        .5 * a[1] + v0[1] + s0[1],     # new y position
-        a[0] + v0[0],                  # 0 horizontal speed
-        a[1] + v0[1],                  # new vertical speed
+        int(.5 * a[0] + v0[0] + s0[0]),     # same x as before
+        int(.5 * a[1] + v0[1] + s0[1]),     # new y position
+        int(a[0] + v0[0]),                  # 0 horizontal speed
+        int(a[1] + v0[1]),                  # new vertical speed
         f1,                            # new amount of liters
         r,
         p
@@ -181,8 +181,8 @@ def main(args):
         print(out_line)
         r = int(out_line[0])
         p = int(out_line[1])
-        # assert((abs(r - ML[-1][5]) <= 15) and (abs(p- ML[-1][6]) <= 1))
-        assert( (abs(r - ML[-1][5]) <= 15) )
+        assert((abs(r - ML[-1][5]) <= 15) and (abs(p- ML[-1][6]) <= 1))
+        # assert( (abs(r - ML[-1][5]) <= 15) )
 
         ### print results
         ML.append(next_round(ML[-1], r, p))
