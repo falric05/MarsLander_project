@@ -17,8 +17,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 speed_eps(5).
 y_eps(20).
-% p_max_step(1).
-% r_max_step(15).
+p_max_step(1).
+r_max_step(15).
 r_max_degree(30).
 danger_Vspeed(40).
 danger_Hspeed(20).
@@ -87,3 +87,21 @@ powerToHover(Sv, P):-
     Sv > 0, !, 
     P is 3.
 powerToHover(_, 4).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% getNextAngle_lv1(Rdes, Rnew, Rnew):-
+%     abs(Rdes, RdesAbs), abs(Rnew, RnewAbs),
+%     RdesAbs >= RnewAbs, !.
+% getNextAngle_lv1(Rdes, Rnew, Rdes).
+
+% getNextAngle(Rprev, Rdes, Rout):-
+%     abs(Rdes, RdAbs), 
+%     r_max_step(RMaxStep),
+%     Rnew is Rprev + RMaxStep,
+%     RdAbs >= Rnew, !.
+%     getNextAngle_lv1(Rdes, Rnew, Rout).
+% getNextAngle(Rprev, Rdes, Rout):-
+%     r_max_step(RMaxStep),
+%     Rnew is Rprev - RMaxStep,
+%     getNextAngle_lv1(Rdes, Rnew, Rout).

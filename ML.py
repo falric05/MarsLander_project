@@ -84,9 +84,9 @@ def land_status(ps, ml, flatArea):
         return -1
     i = 0
     F_esc = False
-    while i < len(ps) and not F_esc:
-        if ml[0] <= ps[i][0] and not ps[i-1][1] == ps[i][1]: ### and not in a flatarea
-            safe_alt = ((ml[0]-ps[i][0]) / (ps[i-1][0]-ps[i][0])) * (ps[i-1][1]-ps[i][1])
+    while i < len(ps)-1 and not F_esc:
+        if ps[i][0] <= ml[0] <= ps[i+1][0] and not ps[i][1] == ps[i+1][1]: ### and not in a flatarea
+            safe_alt = ((ml[0]-ps[i][0]) / (ps[i+1][0]-ps[i][0])) * (ps[i+1][1]-ps[i][1])
             if ml[1] < safe_alt + ps[i][1]:
                 return -1
             else:
