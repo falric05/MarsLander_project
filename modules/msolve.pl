@@ -111,47 +111,55 @@
 
 %
 
-predict_HPA(Yl, _, _):- 
+predict_HPA(Yl, _, _, Rprev):- 
 	isFinishing(Yl), !,
-	write("0 3 predict_HPA_HP1").
+	getNextAngle(Rprev, 0, Rout),
+	write(Rout),
+	write(" 3 predict_HPA_HP1").
 
-predict_HPA(_, Sh, Sv):- 
+predict_HPA(_, Sh, Sv, Rprev):- 
 	hasSafeSpeed(Sh, Sv), !,
-	write("0 2 predict_HPA_HP2").
+	getNextAngle(Rprev, 0, Rout),
+	write(Rout), 
+	write(" 2 predict_HPA_HP2").
 
-predict_HPA(_, Sh, Sv):- 
-	angleToSlow(Sh, Sv, R),
-	write(R), write(" 4 predict_HPA_HP3").
+predict_HPA(_, Sh, Sv, Rprev):- 
+	angleToSlow(Sh, Sv, Rdes),
+	getNextAngle(Rprev, Rdes, Rout),
+	write(Rout), write(" 4 predict_HPA_HP3").
 
 %%
 
-predict_HPB_HP1(Sh, Sv):-
-	angleToSlow(Sh, Sv, R),
-	write(R), write(" 4 predict_HPB_HP1").
+predict_HPB_HP1(Sh, Sv, Rprev):-
+	angleToSlow(Sh, Sv, Rdes),
+	getNextAngle(Rprev, Rdes, Rout),
+	write(Rout), write(" 4 predict_HPB_HP1").
 
-predict_HPB_HP2(Xl):-
-	angleToLandingSite(Xl, R),
-	write(R), write(" 4 predict_HPB_HP2").
+predict_HPB_HP2(Xl, Rprev):-
+	angleToLandingSite(Xl, Rdes),
+	getNextAngle(Rprev, Rdes, Rout),
+	write(Rout), write(" 4 predict_HPB_HP2").
 
-predict_HPB_HP3(Sv):-
+predict_HPB_HP3(Sv, Rprev):-
 	powerToHover(Sv, P),
-	write("0 "), write(P), write(" predict_HPB_HP3").
+	getNextAngle(Rprev, 0, Rout),
+	write(Rout), write(" "), write(P), write(" predict_HPB_HP3").
 
 %
 
-predict_HPB(Xl, Sh, Sv):- 
+predict_HPB(Xl, Sh, Sv, R):- 
 	goesInWrongDirection(Xl, Sh), !,
-	predict_HPB_HP1(Sh, Sv).
-predict_HPB(_, Sh, Sv):- 
+	predict_HPB_HP1(Sh, Sv, R).
+predict_HPB(_, Sh, Sv, R):- 
 	goesTooFastH(Sh), !,
-	predict_HPB_HP1(Sh, Sv).
+	predict_HPB_HP1(Sh, Sv, R).
 
-predict_HPB(Xl, Sh, _):- 
+predict_HPB(Xl, Sh, _, R):- 
 	goesTooSlowH(Sh), !,
-	predict_HPB_HP2(Xl).
+	predict_HPB_HP2(Xl, R).
 
-predict_HPB(_, _, Sv):-
-	predict_HPB_HP3(Sv).
+predict_HPB(_, _, Sv, R):-
+	predict_HPB_HP3(Sv, R).
 
 %%%
 
@@ -159,12 +167,12 @@ predict:-
 	mars_zone(S),
 	bl_landing_site(BL), 
     checkLandingsite(S, BL, _, _),
-	lander(Xl, Yl, Sh, Sv, _, _, _),
+	lander(Xl, Yl, Sh, Sv, _, R, _),
 	isOverLandingSite(Xl), !,
-	predict_HPA(Yl, Sh, Sv),
+	predict_HPA(Yl, Sh, Sv, R),
 	halt.
 
 predict:-
-	lander(Xl, _, Sh, Sv, _, _, _),
-	predict_HPB(Xl, Sh, Sv),
+	lander(Xl, _, Sh, Sv, _, R, _),
+	predict_HPB(Xl, Sh, Sv, R),
 	halt.

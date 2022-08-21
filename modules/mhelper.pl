@@ -6,7 +6,8 @@
                     goesTooSlowH/1,
                     angleToSlow/3,
                     angleToLandingSite/2,
-                    powerToHover/2]).
+                    powerToHover/2,
+                    getNextAngle/3]).
 :- use_module(minput).
 :- use_module(mlander).
 :- use_module(mcheck).
@@ -19,7 +20,7 @@ speed_eps(5).
 y_eps(20).
 p_max_step(1).
 r_max_step(15).
-r_max_degree(30).
+r_max_degree(90).
 danger_Vspeed(40).
 danger_Hspeed(20).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -89,19 +90,15 @@ powerToHover(Sv, P):-
 powerToHover(_, 4).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% getNextAngle_lv1(Rdes, Rnew, Rnew):-
-%     abs(Rdes, RdesAbs), abs(Rnew, RnewAbs),
-%     RdesAbs >= RnewAbs, !.
-% getNextAngle_lv1(Rdes, Rnew, Rdes).
-
-% getNextAngle(Rprev, Rdes, Rout):-
-%     abs(Rdes, RdAbs), 
-%     r_max_step(RMaxStep),
-%     Rnew is Rprev + RMaxStep,
-%     RdAbs >= Rnew, !.
-%     getNextAngle_lv1(Rdes, Rnew, Rout).
-% getNextAngle(Rprev, Rdes, Rout):-
-%     r_max_step(RMaxStep),
-%     Rnew is Rprev - RMaxStep,
-%     getNextAngle_lv1(Rdes, Rnew, Rout).
+getNextAngle(Rprev, Rdes, Rdes):-
+    Rdiff is Rprev - Rdes,
+    abs(Rdiff, RdiffAbs), 
+    r_max_step(RMaxStep),
+    RdiffAbs =< RMaxStep, !.
+getNextAngle(Rprev, Rdes, Rnew):-
+    Rdes < Rprev, !,
+    r_max_step(RMaxStep),
+    Rnew is Rprev - RMaxStep.
+getNextAngle(Rprev, _, Rnew):-
+    r_max_step(RMaxStep),
+    Rnew is Rprev + RMaxStep.
