@@ -1,4 +1,4 @@
-:- module(mhelper, [isOverLandingSite/1, 
+:- module(mutils, [isOverLandingSite/1, 
                     isFinishing/1,
                     hasSafeSpeed/2,
                     goesInWrongDirection/2,

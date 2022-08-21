@@ -1,6 +1,6 @@
 :- module(mcheck, [checkX/1, checkY/1, checkF/1, checkSurface/1, checkLandingsite/4, landing_site/3]).
 :- use_module(minput).
-:- use_module(mhelper).
+:- use_module(mutils).
 :- dynamic landing_site/3.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
