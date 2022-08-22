@@ -1,11 +1,9 @@
 import numpy as np
-import time
 import matplotlib as mpl
 from matplotlib import pyplot as plt
 from matplotlib.animation import FuncAnimation as anm 
 from svgpathtools import svg2paths
 from svgpath2mpl import parse_path
-from turtle import color
 import os
 
 from utils.args import parse_args
