@@ -175,14 +175,11 @@ def main(args):
         print(ML[-1])
 
         ### make prediction
-        # os.system('swipl -s .\MarsLander_project\modules\msolve.pl -g predict')
-        # time.sleep(1)
         out_line = os.popen('swipl -s .\MarsLander_project\modules\msolve.pl -g predict').read().split()
         print(out_line)
         r = int(out_line[0])
         p = int(out_line[1])
         assert((abs(r - ML[-1][5]) <= 15) and (abs(p- ML[-1][6]) <= 1))
-        # assert( (abs(r - ML[-1][5]) <= 15) )
 
         ### print results
         ML.append(next_round(ML[-1], r, p))
@@ -203,11 +200,11 @@ def main(args):
     fig, ax = plt.subplots(1, 1)
     fig.set_size_inches(8,4)
     
-    
-    ani = anm(fig, __animate_surface, frames=t+1, interval=125, repeat=False)
-    ani.save('marsLander.gif')
-    plt.show()
-    plt.close()
+    if args.plot:
+        ani = anm(fig, __animate_surface, frames=t+1, interval=500, repeat=False)
+        ani.save('marsLander.gif')
+        plt.show()
+        plt.close()
 
 ###
 
