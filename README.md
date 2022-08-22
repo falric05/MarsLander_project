@@ -74,3 +74,7 @@ More info about it in https://www.swi-prolog.org/pldoc/man?section=modules
 ```
 python .\MarsLander_project\ML.py --data ins-0 
 ```
+or to plot solution
+```
+python .\MarsLander_project\ML.py --data ins-0 --plot
+```
