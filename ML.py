@@ -24,10 +24,12 @@ MAX_X = 7000
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
 def __getLanderMarker(r):
+    ### get the lander png image to use it as marker for plot
     lander_path = os.path.join('MarsLander_project', 'Images', 'lander.svg')
     assert(os.path.exists(lander_path))
     lander_path, attributes = svg2paths(lander_path)
     lander_marker = parse_path(attributes[0]['d'])
+    ### rotate the marker according to the rotation action
     lander_marker = lander_marker.transformed(mpl.transforms.Affine2D().rotate_deg(r))
     return lander_marker
 
@@ -139,11 +141,9 @@ def main(args):
                         color='r')
         ax.set_title(args.data)
 
-    ### get the lander png image to use it as marker for plot
-    # lander_marker = __getLanderMarker()
-
     ### read input file
-    input_file = os.path.join('MarsLander_project', 'data', args.data + '.txt')
+    print(Storage.data_dir)
+    input_file = Storage.data_file_url(args.data)
     POINTS, ML, flatArea = __readFile(input_file)
 
     ### parse input file
@@ -202,8 +202,7 @@ def main(args):
     
     if args.plot:
         ani = anm(fig, __animate_surface, frames=t+1, interval=500, repeat=False)
-        
-        ani.save('marsLander.gif')
+        ani.save(str(Storage.out_file_url(args.data, None).resolve()))
         plt.show()
         plt.close()
 

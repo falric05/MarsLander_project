@@ -2,10 +2,9 @@ from pathlib import Path
 
 ###
 
-ROOT_SRC = Path(__file__).parent.parent
-ROOT = Path(__file__).parent.parent.parent
+ROOT = Path(__file__).parent.parent
 
-class Storage:
+class StorageClass:
     @property
     def _root_dir_name(self) -> str:
         return 'MarsLander_project'
@@ -18,6 +17,10 @@ class Storage:
 
     def data_dir(self) -> Path:
         return ROOT.joinpath("data")
+    
+    def data_file_url(self, file_name: str) -> Path:
+        assert isinstance(file_name, str)
+        return self.data_dir().joinpath(f"{file_name}.txt")
 
     def out_dir(self) -> Path:
         # return self._root_dir.joinpath("out/json")
@@ -32,3 +35,5 @@ class Storage:
         self.out_dir().joinpath(partial_file_url).mkdir(exist_ok=True, parents=True)
 
         return self.out_dir().joinpath(f"{partial_file_url}{file_name}.gif")
+
+Storage = StorageClass()
