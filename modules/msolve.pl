@@ -5,18 +5,18 @@
 :- use_module(mutils).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% %% solve predicate
+%%% solve predicate
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 predict_HPA(Yl, _, _, Rprev, Pprev):- 
-	isFinishing(Yl), !,
+	checkLanding(Yl), !,
 	getNextAngle(Rprev, 0, Rout),
 	getNextTPower(Pprev, 3, Pout),
 	write(Rout), write(" "), write(Pout), 
 	write(" predict_HPA_HP1").
 
 predict_HPA(_, Sh, Sv, Rprev, Pprev):- 
-	hasSafeSpeed(Sh, Sv), !,
+	checkSpeed(Sh, Sv), !,
 	getNextAngle(Rprev, 0, Rout),
 	getNextTPower(Pprev, 2, Pout),
 	write(Rout), write(" "), write(Pout), 
@@ -55,14 +55,14 @@ predict_HPB_HP3(Sv, Rprev, Pprev):-
 %
 
 predict_HPB(Xl, Sh, Sv, R, P):- 
-	goesInWrongDirection(Xl, Sh), !,
+	checkDirection(Xl, Sh), !,
 	predict_HPB_HP1(Sh, Sv, R, P).
 predict_HPB(_, Sh, Sv, R, P):- 
-	goesTooFastH(Sh), !,
+	checkHighSpeedH(Sh), !,
 	predict_HPB_HP1(Sh, Sv, R, P).
 
 predict_HPB(Xl, Sh, _, R, P):- 
-	goesTooSlowH(Sh), !,
+	checkLowSpeedH(Sh), !,
 	predict_HPB_HP2(Xl, R, P).
 
 predict_HPB(_, _, Sv, R, P):-
@@ -75,7 +75,8 @@ predict:-
 	bl_landing_site(BL), 
     checkLandingsite(S, BL, _, _),
 	lander(Xl, Yl, Sh, Sv, _, R, P),
-	isOverLandingSite(Xl), !,
+	%%%
+	checkOverLandingSite(Xl), !,
 	predict_HPA(Yl, Sh, Sv, R, P),
 	halt.
 
