@@ -10,6 +10,7 @@ import os
 
 from utils.args import parse_args
 from utils.parser import parse
+from utils.storage import Storage
 
 
 POINTS = []
@@ -63,7 +64,6 @@ def next_round(ml, r, p):
     else:
         amod = 0
     a = [amod*np.cos(r1), amod*np.sin(r1) - 3.711]
-    # a = [amod+3.711, amod]
     print('acc:',a)
     return [
         int(.5 * a[0] + v0[0] + s0[0]),     # same x as before
@@ -202,6 +202,7 @@ def main(args):
     
     if args.plot:
         ani = anm(fig, __animate_surface, frames=t+1, interval=500, repeat=False)
+        
         ani.save('marsLander.gif')
         plt.show()
         plt.close()
