@@ -88,33 +88,39 @@ def next_round(ml, r, p):
 ###          0  for in game status
 ###         -1  for destructive landing
 def land_status(ps, ml, flatArea):
-    if (ml[0] <= 0 or ml[1] <= 0) or (ml[0] >= MAX_X or ml[1] >= MAX_Y):
+    if (ml[0] < 0 or ml[1] < 0) or (ml[0] >= MAX_X or ml[1] >= MAX_Y):
         return -1
     i = 0
     F_esc = False
     while i < len(ps)-1 and not F_esc:
-        if ps[i][0] <= ml[0] <= ps[i+1][0] and not ps[i][1] == ps[i+1][1]: ### and not in a flatarea
-            safe_alt = ((ml[0]-ps[i][0]) / (ps[i+1][0]-ps[i][0])) * (ps[i+1][1]-ps[i][1])
-            if ml[1] < safe_alt + ps[i][1]:
+        ### search the points in which the lander is located at each time t
+        ### such that they don't corresponds to a flat area
+        if ps[i][0] <= ml[0] <= ps[i+1][0] and not ps[i][1] == ps[i+1][1]: 
+            ### compute the 
+            land_y_coord = ((ml[0]-ps[i][0]) / (ps[i+1][0]-ps[i][0])) * (ps[i+1][1]-ps[i][1]) + ps[i][1]
+            ### if the lander reach the land y coord 
+            if ml[1] < land_y_coord:
+                ### it will explode
                 return -1
             else:
+                ### otherwisw we can exit because it is still flying
                 F_esc = True
         i += 1
+    ### get position
     s0 = [ml[0], ml[1]]
+    ### get speed
     v0 = [ml[2], ml[3]]
+    ### get rotation
     r = ml[5]
     ### if the lander is over the flat area
-    if s0[0] > flatArea[0] and s0[0] < flatArea[1]:
+    if flatArea[0] <= s0[0] <= flatArea[1]:
         ### if the lander reached the land
         if s0[1] <= flatArea[2]:
-            ### if the land satisfy the landing constraints
+            ### if the landing satisfies the landing constraints
             if r == 0 and abs(v0[0]) <= 20 and abs(v0[1]) <= 40:
                 return 1
             else:
                 return -1
-    ### if the lander go under 0
-    elif s0[1] < 0:
-        return -1
     return 0
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
@@ -224,7 +230,7 @@ def main(args):
     ###     not(F_esc) => not(F_land)
     if not F_esc:
         F_land = False
-    
+
     fig, ax = plt.subplots(1, 1)
     fig.set_size_inches(8,4)
     
