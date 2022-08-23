@@ -28,8 +28,7 @@ checkLandingsite([surface(X, Y)|T], BL, _, _):-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%              GAME CHECKS CASE CONDITIONS                 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
+%%% true if the lander is passing over the landing site
 checkOverLandingSite(Xl):-
     landing_site(X0, X1, _), 
     X0 < Xl, Xl < X1.
