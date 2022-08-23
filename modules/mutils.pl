@@ -55,6 +55,8 @@ regulateTPower(Sv, P):-
 regulateTPower(_, 4).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% compute the right angle to deliver to the game, according to the limit of +/-15°
+%%% among two next game turns, the previous angle and the desired one
 getNextAngle(Rprev, Rdes, Rdes):-
     Rdiff is Rprev - Rdes,
     abs(Rdiff, RdiffAbs), 
@@ -68,6 +70,8 @@ getNextAngle(Rprev, _, Rnew):-
     r_max_step(RMaxStep),
     Rnew is Rprev + RMaxStep.
 
+%%% compute the right power to deliver to the game, according to the limit of +/-1
+%%% among two next game turns, the previous power and the desired one
 getNextTPower(Pprev, Pdes, Pdes):-
     Pdiff is Pprev - Pdes,
     abs(Pdiff, PdiffAbs), 
