@@ -3,8 +3,8 @@
                    %%%
                    checkOverLandingSite/1, 
                    checkLanding/1,
-                   checkSpeed/2,
-                   checkDirection/2,
+                   checkSpeedLimit/2,
+                   checkOppositeDirection/2,
                    checkHighSpeedH/1,
                    checkLowSpeedH/1]).
 :- use_module(minput).
@@ -40,17 +40,17 @@ checkLanding(Yl):-
     Yl < YplusEps.
 
 %%% true if speed is under speed limits 
-checkSpeed(Sh, Sv):-
+checkSpeedLimit(Sh, Sv):-
     abs(Sh, ShAbs), abs(Sv, SvAbs),
     danger_Hspeed(DSh), danger_Vspeed(DSv), speed_eps(Eps),
     DSh1 is DSh - Eps, DSv1 is DSv - Eps,
     ShAbs =< DSh1, SvAbs =< DSv1.
 
-%%% true if the speed direction is opposite to the to the direction 
+%%% true if the speed direction is opposite to the direction 
 %%% from the lander to the landing site
-checkDirection(Xl, Sh):-
+checkOppositeDirection(Xl, Sh):-
     landing_site(X0, _, _), Xl < X0, Sh < 0, !. 
-checkDirection(Xl, Sh):-
+checkOppositeDirection(Xl, Sh):-
     landing_site(_, X1, _), X1 < Xl, Sh > 0.
 
 %%% true if the horizontal speed is over the horizontal speed limit

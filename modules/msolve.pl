@@ -16,14 +16,14 @@ predict_HPA(Yl, _, _, Rprev, Pprev):-
 	write(" predict_HPA_HP1").
 
 predict_HPA(_, Sh, Sv, Rprev, Pprev):- 
-	checkSpeed(Sh, Sv), !,
+	checkSpeedLimit(Sh, Sv), !,
 	getNextAngle(Rprev, 0, Rout),
 	getNextTPower(Pprev, 2, Pout),
 	write(Rout), write(" "), write(Pout), 
 	write(" predict_HPA_HP2").
 
 predict_HPA(_, Sh, Sv, Rprev, Pprev):- 
-	angleToSlow(Sh, Sv, Rdes),
+	angleDecelerate(Sh, Sv, Rdes),
 	getNextAngle(Rprev, Rdes, Rout),
 	getNextTPower(Pprev, 4, Pout),
 	write(Rout), write(" "), write(Pout), 
@@ -32,7 +32,7 @@ predict_HPA(_, Sh, Sv, Rprev, Pprev):-
 %%
 
 predict_HPB_HP1(Sh, Sv, Rprev, Pprev):-
-	angleToSlow(Sh, Sv, Rdes),
+	angleDecelerate(Sh, Sv, Rdes),
 	getNextAngle(Rprev, Rdes, Rout),
 	getNextTPower(Pprev, 4, Pout),
 	write(Rout), write(" "), write(Pout), 
@@ -46,7 +46,7 @@ predict_HPB_HP2(Xl, Rprev, Pprev):-
 	write(" predict_HPB_HP2").
 
 predict_HPB_HP3(Sv, Rprev, Pprev):-
-	powerToHover(Sv, P),
+	regulateTPower(Sv, P),
 	getNextAngle(Rprev, 0, Rout),
 	getNextTPower(Pprev, P, Pout),
 	write(Rout), write(" "), write(Pout), 
@@ -55,7 +55,7 @@ predict_HPB_HP3(Sv, Rprev, Pprev):-
 %
 
 predict_HPB(Xl, Sh, Sv, R, P):- 
-	checkDirection(Xl, Sh), !,
+	checkOppositeDirection(Xl, Sh), !,
 	predict_HPB_HP1(Sh, Sv, R, P).
 predict_HPB(_, Sh, Sv, R, P):- 
 	checkHighSpeedH(Sh), !,

@@ -1,7 +1,7 @@
 :- module(mutils, [
-                   angleToSlow/3,
+                   angleDecelerate/3,
                    angleToLandingSite/2,
-                   powerToHover/2,
+                   regulateTPower/2,
                    getNextAngle/3,
                    getNextTPower/3]).
 :- use_module(minput).
@@ -12,15 +12,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%% returns the best angle to slow down marse lander
-%%% (the angle directing thrust in the opposite direction to the mvmt)
-angleToSlow(Sh, Sv, Rround):-
+angleDecelerate(Sh, Sv, Rround):-
     S2 is (Sh * Sh) + (Sv * Sv),
     sqrt(S2, S), Sh_over_S is Sh / S,
     asin(Sh_over_S, Rrad),
     Rdeg is Rrad * 180 / pi, Rround is round(Rdeg).
 
 %%% returns the exact angle to compensate gravity while
-%%% going toward target
+%%% the leander is going to the landing site
 get_angle(Xl, R, R1):-
     landing_site(X0, _, _), Xl < X0, !,
     R1 is -R.
@@ -36,11 +35,11 @@ angleToLandingSite(Xl, R):-
     Rround is round(Rdeg),
     get_angle(Xl, Rround, R).
 
-%%%  returns the thrust power needed to aim a null vertical speed
-powerToHover(Sv, P):-
+%%% returns the thrust power needed to aim a null vertical speed
+regulateTPower(Sv, P):-
     Sv > 0, !, 
     P is 3.
-powerToHover(_, 4).
+regulateTPower(_, 4).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 getNextAngle(Rprev, Rdes, Rdes):-
