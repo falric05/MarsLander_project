@@ -1,5 +1,4 @@
-:- module(mutils, [
-                   angleDecelerate/3,
+:- module(mutils, [angleDecelerate/3,
                    angleToLandingSite/2,
                    regulateTPower/2,
                    getNextAngle/3,
@@ -10,13 +9,27 @@
 :- use_module(mcheck).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% computes the norm 2 of a vector
+norm2_helper([], S, U):-
+    sqrt(S, U).
+norm2_helper([H|T], S, U):-
+    HS is (H * H) + S,
+    norm2_helper(T, HS, U).
 
+norm2(V, U):-
+    norm2_helper(V, 0, U).
+
+%%% converts an angle in radiants to degree
+radToDeg(Rrad, Rdeg):-
+    Rdeg is Rrad * 180 / pi.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% returns the best angle to slow down marse lander
 angleDecelerate(Sh, Sv, Rround):-
-    S2 is (Sh * Sh) + (Sv * Sv),
-    sqrt(S2, S), Sh_over_S is Sh / S,
-    asin(Sh_over_S, Rrad),
-    Rdeg is Rrad * 180 / pi, Rround is round(Rdeg).
+    norm2([Sh, Sv], Snorm),
+    Rrad is asin(Sh / Snorm),
+    radToDeg(Rrad, Rdeg),
+    Rround is round(Rdeg).
 
 %%% returns the exact angle to compensate gravity while
 %%% the leander is going to the landing site
@@ -29,9 +42,9 @@ get_angle(Xl, R, R1):-
 get_angle(_, _, 0).
 
 angleToLandingSite(Xl, R):-
-    g(G), G_over_4 is G / 4,
-    acos(G_over_4, Rrad),
-    Rdeg is Rrad * 180 / pi, 
+    g(G), 
+    Rrad is acos(G / 4),
+    radToDeg(Rrad, Rdeg),
     Rround is round(Rdeg),
     get_angle(Xl, Rround, R).
 
