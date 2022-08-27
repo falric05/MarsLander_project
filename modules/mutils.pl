@@ -31,7 +31,7 @@ angleDecelerate(Sh, Sv, Rround):-
     radToDeg(Rrad, Rdeg),
     Rround is round(Rdeg).
 
-%%% returns the exact angle to compensate gravity while
+%%% returns the angle needed to contrast Mars gravity while
 %%% the leander is going to the landing site
 get_angle(Xl, R, R1):-
     landing_site(X0, _, _), Xl < X0, !,
@@ -48,7 +48,7 @@ angleToLandingSite(Xl, R):-
     Rround is round(Rdeg),
     get_angle(Xl, Rround, R).
 
-%%% returns the thrust power needed to aim a null vertical speed
+%%% returns the thrust power needed to get a null vertical speed
 regulateTPower(Sv, P):-
     Sv > 0, !, 
     P is 3.

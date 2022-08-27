@@ -8,6 +8,7 @@
 %%% solve predicate
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%%% HPA case: Episode 1
 predict_HPA(Yl, _, _, Rprev, Pprev):- 
 	checkLanding(Yl), !,
 	getNextAngle(Rprev, 0, Rout),
@@ -29,8 +30,7 @@ predict_HPA(_, Sh, Sv, Rprev, Pprev):-
 	write(Rout), write(" "), write(Pout), 
 	write(" predict_HPA_HP3").
 
-%%
-
+%%% HPB case: Episode 2
 predict_HPB_HP1(Sh, Sv, Rprev, Pprev):-
 	angleDecelerate(Sh, Sv, Rdes),
 	getNextAngle(Rprev, Rdes, Rout),
@@ -68,19 +68,22 @@ predict_HPB(Xl, Sh, _, R, P):-
 predict_HPB(_, _, Sv, R, P):-
 	predict_HPB_HP3(Sv, R, P).
 
-%%%
-
+%%% predict predicate, the one that can be used to solve 
+%%% a game turn of Mars lander
 predict:-
+	%%% searching the landing_site
 	mars_zone(S),
 	bl_landing_site(BL), 
     checkLandingsite(S, BL, _, _),
 	lander(Xl, Yl, Sh, Sv, _, R, P),
-	%%%
+	%%% is the lander over the landing site?
 	checkOverLandingSite(Xl), !,
+	%%% Episode 1
 	predict_HPA(Yl, Sh, Sv, R, P),
 	halt.
 
 predict:-
+	%%% Episode 2
 	lander(Xl, _, Sh, Sv, _, R, P),
 	predict_HPB(Xl, Sh, Sv, R, P),
 	halt.
