@@ -57,12 +57,10 @@ checkOppositeDirection(Xl, Sh):-
 checkHighSpeedH(Sh):-
     abs(Sh, ShAbs), 
     fast_Hspeed(DSh),
-    % danger_Hspeed(DSh), DSh1 is DSh * 4,
     ShAbs > DSh.
 
 %%% true if the horizontal speed is under the horizontal speed limit
 checkLowSpeedH(Sh):-
     abs(Sh, ShAbs), 
-    % danger_Hspeed(DSh), DSh1 is DSh * 2,
     slow_Hspeed(DSh), 
     ShAbs < DSh.
